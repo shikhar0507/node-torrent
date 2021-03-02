@@ -1,0 +1,22 @@
+'use strict';
+
+const fs = require('fs');
+const bencode = require('bencode');
+
+module.exports.openTorrent = (path) =>{
+    return bencode.decode(fs.readFileSync(path))
+    
+}
+
+module.exports.size = torrent => {
+    console.log(torrent,torrent.info)
+    console.log(torrent.info.files)
+    console.log(torrent.info.size)
+}
+
+module.exports.infoHash = torrent => {
+    const crypto = require('crypto');
+    const info = bencode.encode(torrent.info)
+    return crypto.createHash('sha1').update(info).digest();
+    
+}
