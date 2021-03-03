@@ -1,0 +1,36 @@
+/** 
+Handle messaging
+**/
+
+'use strict';
+
+const hash = require('./torrent-parser').infoHash;
+const peerId = required('./utils').generatePeerId;
+module.exports.buildHandshake = (torrent) => {
+    //pstrlen 19
+    // pstr 1
+    //reserved 8
+    //info hash 20
+    // peer id 20
+    
+    const buff = Buffer.alloc(98);
+
+    //pstrlen
+    buff.writeUInt8(19,0)
+
+    //pstr
+    buff.write("BitTorrent protocol",1)
+
+    //reserved
+    buff.writeUInt32BE(0,20)
+    buff.writeUInt32BE(0,24)
+
+    //info_hash
+    hash(torrent).copy(buff,48)
+
+
+    //peer id
+    peerId.copy(buff,68);
+    
+
+}
