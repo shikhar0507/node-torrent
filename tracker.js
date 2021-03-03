@@ -14,18 +14,17 @@ module.exports.getPeers = (torrent,callback) =>{
     let done = false;
     let n = 0;  
     const interval = setInterval(()=>{
-	if(done == true) return clearInterval(interval);
+	if(done) return clearInterval(interval);
 	n = 1;
 	trackerUtils.updSend(socket,trackerUtils.buildConnReq(),rawUrl,()=>{
-	    console.log('send connection request')
+	    console.log('sending connection request')
 	})
     },n ?  (2**n)*15*1000 : 500)
 
     
 
     socket.on('message', (response) => {
-	done = true;
-        
+	done = true
 	
         switch(trackerUtils.respType(response)) {
             case "connect":
