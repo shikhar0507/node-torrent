@@ -61,6 +61,7 @@ const trackerUtils = (()=>{
     }
     const respType = (resp) => {
 	const action =resp.readUInt32BE(0);
+	
 	if(action ==0) return "connect";
 	if(action == 1) return "announce";
     }
@@ -131,7 +132,7 @@ const trackerUtils = (()=>{
 	    peers:grps.map(address=>{
 		return {
 		    ip:address.slice(0,4).join("."),
-		    port:address.slice(4)
+		    port:address.readUInt16BE(4)
 		}
 	    })
 	}

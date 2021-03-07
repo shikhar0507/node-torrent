@@ -1,26 +1,21 @@
-/**
-Download from peers
-
-**/
-
 'use strict';
 
 const net = require('net')
 const socket = new net.Socket();
 
 
-module.exports.download = (peers) => {
+module.exports.download = (peer) => {
 
-    download(peers)
+    download(peer)
 }
 
 
-const download = (peers) => {
+const download = (peer) => {
 
     socket.on('error',console.error)
-
-    socket.connect(port,ip,()=>{
-	socket.write()
+    console.log(peer)
+    socket.connect(peer.port,peer.ip,()=>{
+//	socket.write()
     })
 
     socket.on('data',(respBuff)=>{

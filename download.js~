@@ -1,0 +1,30 @@
+/**
+Download from peers
+
+**/
+
+'use strict';
+
+const net = require('net')
+
+const message = require('./message');
+
+module.exports.download = (peer,torrent) => {
+
+    download(peer,torrent)
+}
+
+
+const download = (peer,torrent) => {
+    const socket = new net.Socket();
+    socket.on('error',console.error)
+    socket.connect(peer.port,peer.ip,()=>{
+	console.log("connected",peer.ip)
+	socket.write(message.buildHandshake(torrent))
+    })
+
+    socket.on('data',(respBuff)=>{
+	console.log('resp',respBuff.toString())
+    })
+}
+

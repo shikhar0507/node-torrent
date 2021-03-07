@@ -5,7 +5,7 @@ Handle messaging
 'use strict';
 
 const hash = require('./torrent-parser').infoHash;
-const peerId = required('./utils').generatePeerId;
+const peerId = require('./utils').generatePeerId;
 
 module.exports.buildHandshake = (torrent) => {
     
@@ -32,7 +32,7 @@ module.exports.buildHandshake = (torrent) => {
 
     //peer id
     peerId().copy(buff,48);
-
+    return buff;
 }
 
 // keep-alive: <len=0000>
@@ -43,7 +43,7 @@ module.exports.stayinAlive = () =>{
 
 //choke: <len=0001><id=0>
 
-module.expoers.choke = () => {
+module.exports.choke = () => {
     const buff = Buffer.alloc(5)
     buff.writeUInt32BE(1,0)
     //id
@@ -65,6 +65,7 @@ module.exports.interested = () => {
     const buff = Buffer.alloc(5)
     buff.writeUInt32BE(1,0)
     buff.writeUInt8(2,4)
+    return buff;
 }
 
 // not interested: <len=0001><id=3>
@@ -72,6 +73,7 @@ module.exports.uninterested = () => {
     const buff = Buffer.alloc(5)
     buff.writeUInt32BE(1,0)
     buff.writeUInt8(3,4)
+    return buff;
 }
 
 //have: <len=0005><id=4><piece index>
@@ -81,7 +83,7 @@ module.exports.uninterested = () => {
 //request: <len=0013><id=6><index><begin><length>
 module.exports.request = (payload) => {
     const buff = Buffer.alloc(17)
-    buff.writeUInt32BE(0013,0)
+    buff.writeUInt32BE(13,0)
     buff.writeUInt8(6,4)
     buff.writeUInt32BE(payload.index,5)
     buff.writeUInt32BE(payload.begin,9)
@@ -93,7 +95,7 @@ module.exports.request = (payload) => {
 module.exports.piece = (payload) => {
     const buff = Buffer.alloc(payload.block.length+13)
     
-    buff.writeUInt32BE(0009+payload.block.length,0)
+    buff.writeUInt32BE(9+payload.block.length,0)
     buff.writeUInt8(7,4)
     buff.writeUInt32BE(payload.index,5)
     buff.writeUInt32BE(payload.begin,9)
@@ -108,8 +110,8 @@ module.exports.piece = (payload) => {
 //cancel: <len=0013><id=8><index><begin><length>
 module.exports.cancel = (payload) => {
     const buff = Buffer.alloc(17)
-    buff.writeUInt32BE(0013,0)
-    buff.writeUInt8(7,4)
+    buff.writeUInt32BE(13,0)
+    buff.writeUInt8(8,4)
     buff.writeUInt32BE(payload.index,5)
     buff.writeUInt32BE(payload.begin,9)
     buff.writeUInt32BE(payload.length,13)
@@ -119,7 +121,7 @@ module.exports.cancel = (payload) => {
 module.exports.port = (port) => {
 
     const buff = Buffer.alloc(7)
-    buff.writeUInt32BE(0003,0)
+    buff.writeUInt32BE(3,0)
     buff.writeUInt8(9,4)
     buff.writeUInt16BE(payload,5)
     return buff
